@@ -18,7 +18,7 @@ public class ServidorHTTP {
     }
 
     private static void manejarCliente(Socket socket) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));//holaaaa
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              OutputStream out = socket.getOutputStream()) {
 
             // Leer primera línea de la petición (ej: "GET /archivo.html HTTP/1.1")
@@ -34,6 +34,13 @@ public class ServidorHTTP {
             // Solo manejamos GET
             if (!method.equals("GET")) {
                 enviarRespuesta(out, "501 Not Implemented", "text/plain", "Método no soportado".getBytes(), null);
+                return;
+            }
+
+            // Manejar la ruta /suma
+            if (resource.contains("/suma")) {
+                String query = resource.contains("?") ? resource.split("\\?")[1] : "";
+                manejarSuma(out, query);
                 return;
             }
 
@@ -81,6 +88,31 @@ public class ServidorHTTP {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void manejarSuma(OutputStream out, String query) throws IOException {
+        // Extraer parámetros a, b, c
+        Map<String, String> parametros = new HashMap<>();
+        try {
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                String[] keyValue = pair.split("=");
+                if (keyValue.length == 2) {
+                    parametros.put(keyValue[0], keyValue[1]);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        int a = Integer.parseInt(parametros.getOrDefault("a", "0"));
+        int b = Integer.parseInt(parametros.getOrDefault("b", "0"));
+        int c = Integer.parseInt(parametros.getOrDefault("c", "0"));
+        
+        int resultado = a + b + c;
+        String respuesta = "Resultado: " + resultado;
+        
+        enviarRespuesta(out, "200 OK", "text/plain", respuesta.getBytes(), null);
     }
 
     private static void enviarRespuesta(OutputStream out, String status, String contentType, byte[] contenido, String lastModified) throws IOException {
