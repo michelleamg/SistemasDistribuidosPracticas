@@ -18,7 +18,7 @@ public class ServidorHTTP {
     }
 
     private static void manejarCliente(Socket socket) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));//holaaaa
              OutputStream out = socket.getOutputStream()) {
 
             // Leer primera línea de la petición (ej: "GET /archivo.html HTTP/1.1")
