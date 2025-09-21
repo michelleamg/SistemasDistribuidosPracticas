@@ -17,7 +17,7 @@ public class AdministradorTraficoSSL {
 
         // Configurar SSL
         System.setProperty("javax.net.ssl.keyStore", "keystore_servidor.jks");
-        System.setProperty("javax.net.ssl.keyStorePassword", "password123");
+        System.setProperty("javax.net.ssl.keyStorePassword", "1234567");
 
         try {
             SSLServerSocketFactory factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
